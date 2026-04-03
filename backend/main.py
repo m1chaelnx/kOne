@@ -7,6 +7,10 @@ Run with: uvicorn main:app --reload
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from app.data.nis2_questions import NIS2_DOMAINS, get_all_questions
 from app.models.schemas import (
@@ -32,6 +36,7 @@ app.add_middleware(
 
 # In-memory storage for now (we'll add a database in Phase 3)
 assessments_db: dict[str, AssessmentResult] = {}
+STATIC_DIR = Path(__file__).parent / "static"
 
 
 @app.get("/api/domains")
@@ -104,3 +109,12 @@ def get_stats():
         "max_possible_score": max_score,
         "assessments_completed": len(assessments_db),
     }
+if STATIC_DIR.exists():
+    app.mount("/assets", StaticFiles(directory=STATIC_DIR / "assets"), name="assets")
+
+    @app.get("/{path:path}")
+    async def serve_frontend(path: str):
+        file_path = STATIC_DIR / path
+        if file_path.is_file():
+            return FileResponse(file_path)
+        return FileResponse(STATIC_DIR / "index.html")

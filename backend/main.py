@@ -34,15 +34,6 @@ app.add_middleware(
 assessments_db: dict[str, AssessmentResult] = {}
 
 
-@app.get("/")
-def root():
-    return {
-        "name": "kOne NIS2 Compliance Scanner",
-        "version": "0.1.0",
-        "status": "running",
-    }
-
-
 @app.get("/api/domains")
 def get_domains():
     """Return all assessment domains (without questions)."""

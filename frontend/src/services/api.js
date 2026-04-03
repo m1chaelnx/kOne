@@ -6,7 +6,7 @@
  * and the backend (where the scoring happens).
  */
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
 
 /**
  * Fetch all assessment domains (the 10 security categories).

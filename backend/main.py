@@ -2,40 +2,42 @@
 kOne — NIS2 Compliance Scanner
 FastAPI Backend Server
 
-Run with: uvicorn main:app --reload
+Dev:  uvicorn main:app --reload
+Prod: uvicorn main:app --host 0.0.0.0 --port 8000
 """
+
+import os
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import os
-from pathlib import Path
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 
 from app.data.nis2_questions import NIS2_DOMAINS, get_all_questions
 from app.models.schemas import (
     AssessmentSubmission, AssessmentResult, QuestionResponse
 )
 from app.services.scoring import calculate_score
+from app.services.pdf_report import generate_report
 
 
 app = FastAPI(
     title="kOne NIS2 Compliance Scanner",
     description="AI-powered NIS2/Czech Cybersecurity Act compliance assessment tool",
-    version="0.1.0",
+    version="1.0.0",
 )
 
-# Allow the React frontend to connect
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Vite dev server
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# In-memory storage for now (we'll add a database in Phase 3)
 assessments_db: dict[str, AssessmentResult] = {}
+
 STATIC_DIR = Path(__file__).parent / "static"
 
 
@@ -109,11 +111,34 @@ def get_stats():
         "max_possible_score": max_score,
         "assessments_completed": len(assessments_db),
     }
+
+
+@app.get("/api/report/{assessment_id}")
+def download_report(assessment_id: str):
+    """Generate and download a PDF compliance report."""
+    if assessment_id not in assessments_db:
+        return {"error": "Assessment not found"}
+
+    result = assessments_db[assessment_id]
+    pdf_bytes = generate_report(result)
+
+    filename = f"kone-nis2-report-{result.company_name.replace(' ', '_')}.pdf"
+
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+# Serve the React frontend in production
+# This must come AFTER all API routes
 if STATIC_DIR.exists():
     app.mount("/assets", StaticFiles(directory=STATIC_DIR / "assets"), name="assets")
 
     @app.get("/{path:path}")
     async def serve_frontend(path: str):
+        """Serve React app for all non-API routes."""
         file_path = STATIC_DIR / path
         if file_path.is_file():
             return FileResponse(file_path)

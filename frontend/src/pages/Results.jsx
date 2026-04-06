@@ -113,9 +113,13 @@ function Results({ result, onRestart }) {
       <div className="divider-chrome" />
 
       <div style={{ display: 'flex', justifyContent: 'center', gap: 12, paddingBottom: 32 }}>
-        <button className="btn-chrome" onClick={onRestart} style={{ height: 40, padding: '0 24px', border: 'none', borderRadius: 'var(--r)', fontFamily: 'var(--font)', cursor: 'pointer' }}>
-          Nové hodnocení
+        <button className="btn-chrome" onClick={() => {
+          const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+          window.open(`${API_BASE}/api/report/${result.id}`, '_blank');
+        }} style={{ height: 40, padding: '0 24px', border: 'none', borderRadius: 'var(--r)', fontFamily: 'var(--font)', cursor: 'pointer' }}>
+          Stáhnout PDF report
         </button>
+        <button className="btn" onClick={onRestart}>Nové hodnocení</button>
         <button className="btn" onClick={() => window.print()}>Tisk</button>
       </div>
     </div>

@@ -287,7 +287,7 @@ def _page_summary(c, r):
 
     text1 = (f"Organizace {r.company_name} dosáhla celkového skóre souladu "
              f"{round(r.overall_percentage)}% ({r.overall_score}/{r.max_score} bodů), "
-             f"což odpovídá statusu „{sl}". Hodnocení provedeno dne {date_str}.")
+             f"což odpovídá statusu "{sl}". Hodnocení provedeno dne {date_str}.")
     y = _draw_text(c, LM, y, text1, size=9.5, color=TEXT, max_width=CONTENT_W)
     y -= 4 * mm
 

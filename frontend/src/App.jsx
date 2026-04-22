@@ -17,7 +17,7 @@ function App() {
     <div className="app">
       <header className="app-header">
         <span className="header-tag" style={{ cursor: 'pointer' }} onClick={restart}>kOne</span>
-        <span className="header-tag">Noxra Enterprises</span>
+        <span className="header-tag">Noxra</span>
       </header>
 
       <main className="app-main">

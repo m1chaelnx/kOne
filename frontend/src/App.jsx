@@ -27,7 +27,7 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <span>© 2026 Noxra Enterprises</span>
+        <span>© 2026 Noxra</span>
         <span>NIS2 · Zákon 264/2025 Sb.</span>
       </footer>
     </div>

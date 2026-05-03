@@ -3,7 +3,7 @@ import { getQuestions, submitAssessment } from '../services/api';
 
 const OPTS = [
   { value: 'yes', label: 'Ano', cls: 'selected-yes' },
-  { value: 'partial', label: 'Částečně', cls: 'selected-partial' },
+  { value: 'partial', label: 'Castecne', cls: 'selected-partial' },
   { value: 'no', label: 'Ne', cls: 'selected-no' },
   { value: 'na', label: 'N/A', cls: 'selected-na' },
 ];
@@ -19,7 +19,7 @@ function Assessment({ companyInfo, onComplete, onBack }) {
   useEffect(() => {
     getQuestions()
       .then(d => { setDomains(d); setLoading(false); })
-      .catch(() => { setError('Backend nedostupný'); setLoading(false); });
+      .catch(() => { setError('Backend nedostupny'); setLoading(false); });
   }, []);
 
   const ans = (qid, val) => setAnswers(p => ({ ...p, [qid]: val }));
@@ -46,65 +46,166 @@ function Assessment({ companyInfo, onComplete, onBack }) {
         answers: Object.entries(answers).map(([question_id, value]) => ({ question_id, value })),
       });
       onComplete(res);
-    } catch { setError('Odeslání selhalo.'); setSubmitting(false); }
+    } catch { setError('Odeslani selhalo.'); setSubmitting(false); }
   };
 
-  if (loading) return <div className="text-center mt-48"><p className="mono">Načítání...</p></div>;
-  if (error) return <div className="text-center mt-48"><p style={{ color: 'var(--signal-red)', marginBottom: 16 }}>{error}</p><button className="btn" onClick={onBack}>← Zpět</button></div>;
+  if (loading) return <div style={{ textAlign: 'center', marginTop: 80 }}><p style={{ fontSize: 12, color: 'var(--text-3)', letterSpacing: 2 }}>NACITANI...</p></div>;
+  if (error) return <div style={{ textAlign: 'center', marginTop: 80 }}><p style={{ color: '#c45050', marginBottom: 16, fontSize: 14 }}>{error}</p><button className="btn" onClick={onBack}>Zpet</button></div>;
   if (!d) return null;
 
   return (
-    <div className="fade-in">
-      <div className="progress-meta">
+    <div className="fade-in" style={{ maxWidth: 640, margin: '0 auto' }}>
+
+      {/* Progress — minimal */}
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        marginBottom: 6, fontSize: 11, color: 'var(--text-3)', letterSpacing: 1
+      }}>
         <span>{doneQ} / {totalQ}</span>
         <span>{Math.round(pct)}%</span>
       </div>
-      <div className="progress-bar">
-        <div className="progress-fill" style={{ width: `${pct}%` }} />
+      <div style={{
+        width: '100%', height: 2, background: 'var(--edge-subtle)',
+        marginBottom: 32, overflow: 'hidden'
+      }}>
+        <div style={{
+          height: '100%', width: pct + '%',
+          background: 'var(--chrome-dim)',
+          transition: 'width 0.4s ease'
+        }} />
       </div>
 
-      <div className="domain-nav">
+      {/* Domain nav — numbered, compact */}
+      <div style={{ display: 'flex', gap: 4, marginBottom: 36 }}>
         {domains.map((x, i) => {
           const done = x.questions.every(q => answers[q.id] !== undefined);
-          let cls = 'domain-pill';
-          if (i === cur) cls += ' active';
-          else if (done) cls += ' complete';
-          return <button key={x.id} className={cls} onClick={() => setCur(i)}>{i + 1}</button>;
+          const isActive = i === cur;
+          return (
+            <button
+              key={x.id}
+              onClick={() => setCur(i)}
+              style={{
+                width: 34, height: 30,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                borderRadius: 3, border: '1px solid',
+                borderColor: isActive ? 'var(--chrome-dim)' : done ? 'rgba(74, 158, 120, 0.25)' : 'var(--edge)',
+                background: isActive ? 'rgba(25, 40, 80, 0.4)' : 'transparent',
+                color: isActive ? 'var(--chrome)' : done ? 'rgba(74, 158, 120, 0.7)' : 'var(--text-3)',
+                fontFamily: 'var(--font)', fontSize: 12, fontWeight: 400,
+                cursor: 'pointer', transition: 'all 0.15s'
+              }}
+            >
+              {i + 1}
+            </button>
+          );
         })}
       </div>
 
-      <div className="mb-8">
-        <div className="label-upper mb-8">{d.article_ref}</div>
-        <h2>{d.name_cs}</h2>
-        <p style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 2 }}>{d.name_en}</p>
+      {/* Domain header */}
+      <div style={{ marginBottom: 12 }}>
+        <p style={{
+          fontSize: 10, fontWeight: 500, letterSpacing: 3,
+          color: 'var(--chrome-dim)', textTransform: 'uppercase', marginBottom: 8
+        }}>
+          {d.article_ref}
+        </p>
+        <h2 style={{
+          fontSize: 22, fontWeight: 500, letterSpacing: '-0.02em',
+          color: 'var(--text-1)', marginBottom: 4
+        }}>
+          {d.name_cs}
+        </h2>
+        <p style={{ fontSize: 13, color: 'var(--text-3)', fontWeight: 300 }}>
+          {d.name_en}
+        </p>
       </div>
 
-      <div className="divider" />
+      <div style={{ height: 1, background: 'var(--edge-subtle)', marginBottom: 8 }} />
 
+      {/* Questions */}
       {d.questions.map(q => (
-        <div key={q.id} className={`q-card ${answers[q.id] ? 'answered' : ''}`}>
-          <p className="q-text-primary">{q.text_cs}</p>
-          <p className="q-text-secondary">{q.text_en}</p>
-          <div className="answer-group">
-            {OPTS.map(o => (
-              <button key={o.value} className={`answer-btn ${answers[q.id] === o.value ? o.cls : ''}`} onClick={() => ans(q.id, o.value)}>
-                {o.label}
-              </button>
-            ))}
+        <div key={q.id} style={{
+          padding: '24px 0',
+          borderBottom: '1px solid var(--edge)',
+        }}>
+          <p style={{
+            fontSize: 16, fontWeight: 400, lineHeight: 1.55,
+            color: 'var(--text-1)', marginBottom: 4
+          }}>
+            {q.text_cs}
+          </p>
+          <p style={{
+            fontSize: 13, color: 'var(--text-3)', lineHeight: 1.5,
+            fontWeight: 300, marginBottom: 16
+          }}>
+            {q.text_en}
+          </p>
+
+          {/* Answer buttons */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6 }}>
+            {OPTS.map(o => {
+              const isSelected = answers[q.id] === o.value;
+              let bg = 'var(--surface-1)';
+              let border = 'var(--edge)';
+              let color = 'var(--text-3)';
+
+              if (isSelected) {
+                if (o.value === 'yes') { bg = 'rgba(74, 158, 120, 0.1)'; border = 'rgba(74, 158, 120, 0.3)'; color = '#4a9e78'; }
+                else if (o.value === 'partial') { bg = 'rgba(184, 148, 42, 0.1)'; border = 'rgba(184, 148, 42, 0.3)'; color = '#b8942a'; }
+                else if (o.value === 'no') { bg = 'rgba(196, 80, 80, 0.1)'; border = 'rgba(196, 80, 80, 0.3)'; color = '#c45050'; }
+                else { bg = 'var(--surface-2)'; border = 'var(--edge-visible)'; color = 'var(--text-2)'; }
+              }
+
+              return (
+                <button
+                  key={o.value}
+                  onClick={() => ans(q.id, o.value)}
+                  style={{
+                    height: 40, border: '1px solid',
+                    borderColor: border, borderRadius: 3,
+                    background: bg, color: color,
+                    fontFamily: 'var(--font)', fontSize: 12,
+                    fontWeight: isSelected ? 500 : 400,
+                    letterSpacing: 1, textTransform: 'uppercase',
+                    cursor: 'pointer', transition: 'all 0.15s',
+                  }}
+                >
+                  {o.label}
+                </button>
+              );
+            })}
           </div>
         </div>
       ))}
 
-      <div className="divider" />
-
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      {/* Navigation */}
+      <div style={{
+        display: 'flex', justifyContent: 'space-between',
+        marginTop: 32, paddingBottom: 24
+      }}>
         <button className="btn" onClick={cur === 0 ? onBack : prev}>
-          ← {cur === 0 ? 'Zpět' : 'Předchozí'}
+          {cur === 0 ? 'Zpet' : 'Predchozi'}
         </button>
-        <button className={isLast ? 'btn-chrome' : 'btn'} onClick={next} disabled={submitting}
-          style={isLast ? { height: 40, padding: '0 24px', border: 'none', borderRadius: 'var(--r)', fontFamily: 'var(--font)', cursor: 'pointer' } : {}}>
-          {submitting ? 'Odesílání...' : isLast ? 'Zobrazit výsledky →' : 'Další →'}
-        </button>
+        {isLast ? (
+          <button
+            className="btn-chrome"
+            onClick={next}
+            disabled={submitting}
+            style={{
+              height: 42, padding: '0 28px', border: 'none',
+              borderRadius: 3, fontFamily: 'var(--font)',
+              fontSize: 12, letterSpacing: 2,
+              cursor: submitting ? 'not-allowed' : 'pointer',
+              opacity: submitting ? 0.4 : 1
+            }}
+          >
+            {submitting ? 'ODESILANI...' : 'VYSLEDKY'}
+          </button>
+        ) : (
+          <button className="btn" onClick={next}>
+            Dalsi
+          </button>
+        )}
       </div>
     </div>
   );

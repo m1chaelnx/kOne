@@ -1,0 +1,34 @@
+/* ══════════════════════════════════════
+   NOXRA DESIGN SYSTEM — COLOR UPDATE
+   Blues darkened to match logo: deep navy (#0a1a5c)
+   Add this to the END of App.css or replace the :root variables
+   ══════════════════════════════════════ */
+
+:root {
+  --chrome: #2a4a8c;
+  --chrome-bright: #3a5ea0;
+  --chrome-pale: #5a7ebe;
+  --chrome-dim: #1a3670;
+  --chrome-ghost: rgba(26, 54, 112, 0.08);
+  --chrome-glow: rgba(26, 54, 112, 0.15);
+  --chrome-border: rgba(26, 54, 112, 0.25);
+  --chrome-shine: rgba(42, 74, 140, 0.3);
+}
+
+/* Darker button gradient */
+.btn-chrome {
+  background: linear-gradient(180deg, #2a4a8c 0%, #1a3670 100%);
+  border: 1px solid #2a4a8c;
+  color: #d0d4e0;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.btn-chrome:hover {
+  background: linear-gradient(180deg, #3a5ea0 0%, #2a4a8c 100%);
+  border-color: #3a5ea0;
+  color: #e0e4f0;
+  box-shadow: 0 0 24px rgba(26, 54, 112, 0.25);
+}

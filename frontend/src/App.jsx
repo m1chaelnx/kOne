@@ -16,8 +16,18 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <span className="header-tag" style={{ cursor: 'pointer' }} onClick={restart}>kOne - NIS2 Scanner</span>
-        <span className="header-tag">Noxra</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, cursor: 'pointer' }} onClick={restart}>
+          <span style={{
+            fontSize: 13, fontWeight: 500, letterSpacing: 4,
+            color: 'var(--text-1)', textTransform: 'uppercase'
+          }}>Noxra</span>
+          <span style={{
+            fontSize: 10, color: 'var(--text-3)', letterSpacing: 2
+          }}>kOne</span>
+        </div>
+        <span style={{
+          fontSize: 9, color: 'var(--text-3)', letterSpacing: 3, textTransform: 'uppercase'
+        }}>NIS2 Scanner</span>
       </header>
 
       <main className="app-main">
@@ -27,8 +37,8 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <span>© 2026 Noxra</span>
-        <span>NIS2 · Zákon 264/2025 Sb.</span>
+        <span>2026 Noxra</span>
+        <span>noxra.ai</span>
       </footer>
     </div>
   );

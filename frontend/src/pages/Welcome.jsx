@@ -3,25 +3,25 @@ import { useState } from 'react';
 const SECTORS = [
   { value: 'energy', label: 'Energetika' },
   { value: 'transport', label: 'Doprava' },
-  { value: 'healthcare', label: 'Zdravotnictvi' },
-  { value: 'digital_infra', label: 'Digitalni infrastruktura' },
-  { value: 'ict_services', label: 'ICT sluzby' },
-  { value: 'public_admin', label: 'Verejna sprava' },
-  { value: 'manufacturing', label: 'Vyroba' },
+  { value: 'healthcare', label: 'Zdravotnictví' },
+  { value: 'digital_infra', label: 'Digitální infrastruktura' },
+  { value: 'ict_services', label: 'ICT služby' },
+  { value: 'public_admin', label: 'Veřejná správa' },
+  { value: 'manufacturing', label: 'Výroba' },
   { value: 'finance', label: 'Finance' },
-  { value: 'water', label: 'Vodni hospodarstvi' },
-  { value: 'food', label: 'Potravinarstvi' },
-  { value: 'chemicals', label: 'Chemicky prumysl' },
-  { value: 'research', label: 'Vyzkum' },
-  { value: 'defense', label: 'Obranny prumysl' },
-  { value: 'other', label: 'Jine' },
+  { value: 'water', label: 'Vodní hospodářství' },
+  { value: 'food', label: 'Potravinářství' },
+  { value: 'chemicals', label: 'Chemický průmysl' },
+  { value: 'research', label: 'Výzkum' },
+  { value: 'defense', label: 'Obranný průmysl' },
+  { value: 'other', label: 'Jiné' },
 ];
 
 const SIZES = [
-  { value: 'micro', label: '1-9 zamestnancu' },
-  { value: 'small', label: '10-49 zamestnancu' },
-  { value: 'medium', label: '50-249 zamestnancu' },
-  { value: 'large', label: '250+ zamestnancu' },
+  { value: 'micro', label: '1-9 zaměstnanců' },
+  { value: 'small', label: '10-49 zaměstnanců' },
+  { value: 'medium', label: '50-249 zaměstnanců' },
+  { value: 'large', label: '250+ zaměstnanců' },
 ];
 
 function Welcome({ onStart }) {
@@ -46,15 +46,15 @@ function Welcome({ onStart }) {
           fontSize: 32, fontWeight: 500, letterSpacing: '-0.03em',
           lineHeight: 1.2, marginBottom: 16, color: 'var(--text-1)'
         }}>
-          Vyhovujete zakonu o kyberneticke bezpecnosti?
+          Vyhovujete zákonu o kybernetické bezpečnosti?
         </h1>
 
         <p style={{
           fontSize: 15, lineHeight: 1.7, color: 'var(--text-2)',
           fontWeight: 300, marginBottom: 0
         }}>
-          Zakon c. 264/2025 Sb. je v platnosti. Pokuty az 250 mil. CZK.
-          Zjistete skutecny stav vasi organizace za 10 minut.
+          Zákon č. 264/2025 Sb. je v platnosti. Pokuty až 250 mil. CZK.
+          Zjistěte skutečný stav vaší organizace za 10 minut.
         </p>
       </div>
 
@@ -67,8 +67,8 @@ function Welcome({ onStart }) {
       }}>
         {[
           { val: '41', lbl: 'Kontrol' },
-          { val: '10', lbl: 'Domen' },
-          { val: '10 min', lbl: 'Cas' },
+          { val: '10', lbl: 'Domén' },
+          { val: '10 min', lbl: 'Čas' },
         ].map((s, i) => (
           <div key={i} style={{
             padding: '16px 0', textAlign: 'center',
@@ -136,7 +136,7 @@ function Welcome({ onStart }) {
         alignItems: 'center'
       }}>
         <p style={{ fontSize: 10, color: 'var(--text-3)', letterSpacing: 1 }}>
-          Zakon c. 264/2025 Sb. | EU NIS2 | NUKIB
+          Zákon č. 264/2025 Sb. | EU NIS2 | NUKIB
         </p>
         <p style={{ fontSize: 10, color: 'var(--text-3)', letterSpacing: 1 }}>
           Zdarma | Bez registrace

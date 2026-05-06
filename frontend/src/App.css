@@ -760,3 +760,4 @@ select option {
   .score-ring { border: 2px solid #333; }
   .chrome-line, .divider-chrome { display: none; }
 }
+@import './colors-update.css';
